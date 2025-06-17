@@ -7,7 +7,7 @@ KOHYA_DIR=${WORKSPACE}/kohya_ss
 
 
 CHECKPOINT_MODELS=(
-    "https://civitai.com/api/download/models/1744439?type=Model&format=SafeTensor&size=pruned&fp=fp16"
+    "https://civitai.com/api/download/models/1744439"
 )
 
 
@@ -22,9 +22,9 @@ function provisioning_start() {
     git submodule update --recursive
     pip install -r requirements.txt
     pip install -r requirements_linux.txt
-    provisioning_get_files \
-        "${KOHYA_DIR}/models/checkpoints" \
-        "${CHECKPOINT_MODELS[@]}"
+    if [ -n "$CIVITAI_TOKEN" ]; then
+        wget --header="Authorization: Bearer $CIVITAI_TOKEN" -qnc --content-disposition --show-progress -e dotbytes="4M" -P "${KOHYA_DIR}/models/" "https://civitai.com/api/download/models/1744439"
+    fi
     
     provisioning_print_end
 }

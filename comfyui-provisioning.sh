@@ -14,7 +14,7 @@ APT_PACKAGES=(
 )
 
 PIP_PACKAGES=(
-    
+    sageattention
     #"package-1"
     #"package-2"
 )
@@ -49,12 +49,12 @@ ESRGAN_MODELS=(
 CONTROLNET_MODELS=(
 )
 #do our shit here because because.
-cd /workspace/ComfyUI/models/diffusion-models
+cd /workspace/ComfyUI/models/diffusion_models
 wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors?download=true"
 wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors?download=true"
 wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors?download=true"
 wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors?download=true"
-cd /workspace/ComfyUI/models/text-encoders
+cd /workspace/ComfyUI/models/text_encoders
 wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors?download=true"
 cd /workspace/ComfyUI/models/vae
 wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true"

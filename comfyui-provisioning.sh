@@ -2,10 +2,7 @@
 
 source /venv/main/bin/activate
 COMFYUI_DIR=${WORKSPACE}/ComfyUI
-cd /workspace/ComfyUI
-git checkout master
-git pull
-pip install -r requirements.txt
+
 # Packages are installed after nodes so we can fix them...
 
 APT_PACKAGES=(
@@ -14,13 +11,11 @@ APT_PACKAGES=(
 )
 
 PIP_PACKAGES=(
-    sageattention
     #"package-1"
     #"package-2"
 )
 
 NODES=(
-    "https://github.com/kijai/ComfyUI-KJNodes"
     #"https://github.com/ltdrdata/ComfyUI-Manager"
     #"https://github.com/cubiq/ComfyUI_essentials"
 )
@@ -30,13 +25,13 @@ WORKFLOWS=(
 )
 
 CHECKPOINT_MODELS=(
+    "https://civitai.com/api/download/models/798204?type=Model&format=SafeTensor&size=full&fp=fp16"
 )
 
 UNET_MODELS=(
 )
 
 LORA_MODELS=(
-    "https://civitai.com/api/download/models/2012120?type=Model&format=SafeTensor"
 )
 
 VAE_MODELS=(
@@ -47,21 +42,7 @@ ESRGAN_MODELS=(
 
 CONTROLNET_MODELS=(
 )
-#do our shit here because because.
-cd /workspace/ComfyUI/models/diffusion_models
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors?download=true"
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors?download=true"
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors?download=true"
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors?download=true"
-cd /workspace/ComfyUI/models/text_encoders
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors?download=true"
-cd /workspace/ComfyUI/models/vae
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true"
-cd /workspace/ComfyUI/models/loras
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors?download=true"
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors?download=true"
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors?download=true"
-wget --content-disposition "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_t2v_lightx2v_4steps_lora_v1.1_low_noise.safetensors?download=true"
+
 ### DO NOT EDIT BELOW HERE UNLESS YOU KNOW WHAT YOU ARE DOING ###
 
 function provisioning_start() {
@@ -198,4 +179,163 @@ function provisioning_download() {
 # Allow user to disable provisioning if they started with a script they didn't want
 if [[ ! -f /.noprovisioning ]]; then
     provisioning_start
+    #!/bin/bash
+
+# Wan 2.2 ComfyUI Setup and Model Download Script
+# Sets up ComfyUI, installs custom nodes, and downloads models in parallel
+
+set -e
+
+BASE_DIR="/workspace/ComfyUI"
+
+echo "================================"
+echo "Setting up ComfyUI..."
+echo "================================"
+
+# Navigate to ComfyUI directory and update
+if [ -d "${BASE_DIR}" ]; then
+    cd "${BASE_DIR}"
+    echo "Checking out master branch..."
+    git checkout master
+    echo "Pulling latest changes..."
+    git pull
+    echo "Installing/updating requirements..."
+    pip install -r requirements.txt
+else
+    echo "Error: ComfyUI directory not found at ${BASE_DIR}"
+    exit 1
+fi
+
+echo ""
+echo "================================"
+echo "Installing Custom Nodes..."
+echo "================================"
+
+# Create custom_nodes directory if it doesn't exist
+mkdir -p "${BASE_DIR}/custom_nodes"
+cd "${BASE_DIR}/custom_nodes"
+
+# Install ComfyUI-Distributed
+if [ -d "ComfyUI-Distributed" ]; then
+    echo "Updating ComfyUI-Distributed..."
+    cd ComfyUI-Distributed
+    git pull
+    cd ..
+else
+    echo "Installing ComfyUI-Distributed..."
+    git clone https://github.com/obsxrver/ComfyUI-Distributed.git
+fi
+
+# Install ComfyUI-KJNodes
+if [ -d "ComfyUI-KJNodes" ]; then
+    echo "Updating ComfyUI-KJNodes..."
+    cd ComfyUI-KJNodes
+    git pull
+    cd ..
+else
+    echo "Installing ComfyUI-KJNodes..."
+    git clone https://github.com/kijai/ComfyUI-KJNodes.git
+fi
+
+# Install ComfyUI_StringOps
+if [ -d "ComfyUI_StringOps" ]; then
+    echo "Updating ComfyUI_StringOps..."
+    cd ComfyUI_StringOps
+    git pull
+    cd ..
+else
+    echo "Installing ComfyUI_StringOps..."
+    git clone https://github.com/MeeeyoAI/ComfyUI_StringOps
+fi
+
+# Install requirements for custom nodes if they exist
+for node_dir in ComfyUI-Distributed ComfyUI-KJNodes ComfyUI_StringOps; do
+    if [ -f "${node_dir}/requirements.txt" ]; then
+        echo "Installing requirements for ${node_dir}..."
+        pip install -r "${node_dir}/requirements.txt" --break-system-packages
+    fi
+done
+
+echo ""
+echo "================================"
+echo "Creating model directories..."
+echo "================================"
+
+# Create directories if they don't exist
+mkdir -p "${BASE_DIR}/models/diffusion_models"
+mkdir -p "${BASE_DIR}/models/loras"
+mkdir -p "${BASE_DIR}/models/text_encoders"
+mkdir -p "${BASE_DIR}/models/vae"
+
+echo ""
+echo "================================"
+echo "Starting parallel model downloads..."
+echo "================================"
+
+# Download diffusion models
+(
+    echo "Downloading wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors..."
+    wget -O "${BASE_DIR}/models/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors" \
+        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors?download=true"
+    echo "✓ High noise model downloaded"
+) &
+
+(
+    echo "Downloading wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors..."
+    wget -O "${BASE_DIR}/models/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors" \
+        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors?download=true"
+    echo "✓ Low noise model downloaded"
+) &
+
+# Download Lightning LoRAs
+(
+    echo "Downloading Wan2.2-Lightning high_noise_model.safetensors..."
+    wget -O "${BASE_DIR}/models/loras/wan2.2_lightning_high_noise_model.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-250928/high_noise_model.safetensors?download=true"
+    echo "✓ High noise Lightning LoRA downloaded"
+) &
+
+(
+    echo "Downloading Wan2.2-Lightning low_noise_model.safetensors..."
+    wget -O "${BASE_DIR}/models/loras/wan2.2_lightning_low_noise_model.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-250928/low_noise_model.safetensors?download=true"
+    echo "✓ Low noise Lightning LoRA downloaded"
+) &
+
+# Download text encoder
+(
+    echo "Downloading umt5_xxl_fp8_e4m3fn_scaled.safetensors..."
+    wget -O "${BASE_DIR}/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" \
+        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors?download=true"
+    echo "✓ Text encoder downloaded"
+) &
+
+# Download VAE
+(
+    echo "Downloading wan_2.1_vae.safetensors..."
+    wget -O "${BASE_DIR}/models/vae/wan_2.1_vae.safetensors" \
+        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true"
+    echo "✓ VAE downloaded"
+) &
+
+
+(
+    git clone https://github.com/thu-ml/SageAttention.git
+    cd SageAttention 
+    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 # parallel compiling (Optional)
+    python setup.py install 
+) &
+
+# Wait for all downloads to complete
+wait
+
+echo "================================"
+echo "All downloads completed successfully!"
+echo ""
+echo "Files downloaded to:"
+echo "  - Diffusion models: ${BASE_DIR}/models/diffusion_models/"
+echo "  - LoRAs: ${BASE_DIR}/models/loras/"
+echo "  - Text encoder: ${BASE_DIR}/models/text_encoders/"
+echo "  - VAE: ${BASE_DIR}/models/vae/"
+
 fi

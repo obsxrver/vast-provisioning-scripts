@@ -285,7 +285,18 @@ echo "================================"
         "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors?download=true"
     echo "✓ Low noise model downloaded"
 ) &
-
+(
+    echo "Downloading wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors..."
+    wget -O "${BASE_DIR}/models/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors" \
+        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors?download=true"
+    echo "✓ High noise model downloaded"
+) &
+(
+    echo "Downloading wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors..."
+    wget -O "${BASE_DIR}/models/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors" \
+        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors?download=true"
+    echo "✓ Low noise model downloaded"
+) &
 # Download Lightning LoRAs
 (
     echo "Downloading Wan2.2-Lightning high_noise_model.safetensors..."
@@ -319,12 +330,11 @@ echo "================================"
 
 
 (
-    git clone https://github.com/thu-ml/SageAttention.git
-    cd SageAttention 
-    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 # parallel compiling (Optional)
-    python setup.py install 
+    git clone https://github.com/thu-ml/SageAttention.git /SageAttention
+    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
+    python /SageAttention/setup.py install
+    python /SageAttention/sageattention3_blackwell setup.py install
 ) &
-
 # Wait for all downloads to complete
 wait
 

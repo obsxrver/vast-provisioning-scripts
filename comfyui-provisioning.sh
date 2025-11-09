@@ -344,8 +344,8 @@ echo "================================"
 (
     git clone https://github.com/thu-ml/SageAttention.git /SageAttention
     export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
-    python /SageAttention/setup.py install
-    python /SageAttention/sageattention3_blackwell setup.py install
+    cd /SageAttention && python setup.py install
+    cd /SageAttention/sageattention3_blackwell && python setup.py install
 ) &
 # Wait for all downloads to complete
 wait

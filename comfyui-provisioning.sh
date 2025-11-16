@@ -263,6 +263,7 @@ echo "================================"
 # Create directories if they don't exist
 mkdir -p "${BASE_DIR}/models/diffusion_models"
 mkdir -p "${BASE_DIR}/models/loras"
+mkdir -p "${BASE_DIR}/models/loras/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/"
 mkdir -p "${BASE_DIR}/models/text_encoders"
 mkdir -p "${BASE_DIR}/models/vae"
 
@@ -299,20 +300,21 @@ echo "================================"
 ) &
 # Download Lightning LoRAs
 (
-    echo "Downloading Wan2.2-Lightning high_noise_model.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/wan2.2_lightning_high_noise_model.safetensors" \
-        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-250928/high_noise_model.safetensors?download=true"
+    echo "Downloading Wan2.2-T2V-Lightning high_noise_model.safetensors..."
+    wget -O "${BASE_DIR}/models/loras/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/high_noise_model.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/high_noise_model.safetensors"
     echo "✓ High noise Lightning LoRA downloaded"
 ) &
 
 (
-    echo "Downloading Wan2.2-Lightning low_noise_model.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/wan2.2_lightning_low_noise_model.safetensors" \
-        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-250928/low_noise_model.safetensors?download=true"
+    echo "Downloading Wan2.2-T2V-Lightning low_noise_model.safetensors..."
+    wget -O "${BASE_DIR}/models/loras/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/low_noise_model.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/low_noise_model.safetensors"
     echo "✓ Low noise Lightning LoRA downloaded"
 ) &
 # Download Lightning LoRAs
 (
+    
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors..."
     wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors" \
         "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors"

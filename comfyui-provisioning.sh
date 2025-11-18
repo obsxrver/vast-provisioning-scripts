@@ -247,8 +247,10 @@ else
     git clone https://github.com/MeeeyoAI/ComfyUI_StringOps
 fi
 
-# Install requirements for custom nodes if they exist
-for node_dir in ComfyUI-Distributed ComfyUI-KJNodes ComfyUI_StringOps; do
+# Install requirements for all custom nodes if they exist
+echo "Checking for requirements.txt in all custom nodes..."
+for node_dir in */; do
+    node_dir="${node_dir%/}"  # Remove trailing slash
     if [ -f "${node_dir}/requirements.txt" ]; then
         echo "Installing requirements for ${node_dir}..."
         pip install -r "${node_dir}/requirements.txt" --break-system-packages
@@ -346,8 +348,8 @@ echo "================================"
 (
     git clone https://github.com/thu-ml/SageAttention.git /SageAttention
     export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
-    python /SageAttention/setup.py install &
-    python /SageAttention/sageattention3_blackwell/setup.py install 
+    cd /SageAttention && python setup.py install &
+    cd /SageAttention/sageattention3_blackwell && python setup.py install 
 ) &
 # Wait for all downloads to complete
 wait

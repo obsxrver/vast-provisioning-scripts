@@ -247,7 +247,7 @@ else
     git clone https://github.com/MeeeyoAI/ComfyUI_StringOps
 fi
 sudo apt-get update
-sudo apt-get install -y cuda-toolkit-12-9
+
 # Install requirements for all custom nodes if they exist
 echo "Checking for requirements.txt in all custom nodes..."
 for node_dir in */; do
@@ -258,8 +258,7 @@ for node_dir in */; do
     fi
 done
 
-git clone https://github.com/thu-ml/SageAttention.git /SageAttention
-export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
+
 echo ""
 echo "================================"
 echo "Creating model directories..."
@@ -336,16 +335,14 @@ echo "================================"
 
 
 (
-    echo "Downloading and installing SageAttention2.2..."
-    cd /SageAttention
-    python setup.py install
+    git clone https://github.com/thu-ml/SageAttention.git /SageAttention
+    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
+    sudo apt-get install -y cuda-libraries-dev-12-9
+    echo "Downloading and installing SageAttention..."
+    cd /SageAttention && python setup.py install &
+    cd /SageAttention/sageattention3_blackwell && python setup.py install &
 ) &
 
-(
-    echo "Downloading and installing SageAttention3..."
-    cd /SageAttention/sageattention3_blackwell
-    python setup.py install
-) &
 # Wait for all downloads to complete
 wait
 

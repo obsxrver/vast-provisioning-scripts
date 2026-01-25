@@ -246,7 +246,8 @@ else
     echo "Installing ComfyUI_StringOps..."
     git clone https://github.com/MeeeyoAI/ComfyUI_StringOps
 fi
-
+sudo apt-get update
+sudo apt-get install -y cuda-toolkit-12-9
 # Install requirements for all custom nodes if they exist
 echo "Checking for requirements.txt in all custom nodes..."
 for node_dir in */; do

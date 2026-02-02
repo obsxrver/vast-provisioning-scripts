@@ -346,7 +346,7 @@ echo "================================"
 
 
 (
-    sudo apt-get update && sudo apt-get install -y cuda-libraries-dev-12-9
+    sudo apt-get update && sudo apt-get install -y cuda-toolkit-12-9
     git clone https://github.com/thu-ml/SageAttention.git /SageAttention
     export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
     cd /SageAttention && python setup.py install &

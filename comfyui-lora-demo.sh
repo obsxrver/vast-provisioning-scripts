@@ -289,18 +289,18 @@ echo "================================"
         "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors?download=true"
     echo "✓ Low noise model downloaded"
 ) &
-# Download I2Pee-X
+# Download I2Pee-V3
 (
     
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/I2Pee-X_Wan2.2_high.safetensors" \
-        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/I2Pee-X_Wan2.2_high.safetensors"
+    wget -O "${BASE_DIR}/models/loras/I2Pee-V3_Wan2.2_high.safetensors" \
+        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/I2Pee-V3_Wan2.2_high.safetensors"
     echo "✓ High noise Lightning LoRA downloaded"
 ) &
 (
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/I2Pee-X_Wan2.2_low.safetensors" \
-        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/I2Pee-X_Wan2.2_low.safetensors"
+    wget -O "${BASE_DIR}/models/loras/I2Pee-V3_Wan2.2_low.safetensors" \
+        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/I2Pee-V3_Wan2.2_low.safetensors"
     echo "✓ Low noise Lightning LoRA downloaded"
 ) &
 # Download Lightning LoRAs
@@ -335,9 +335,9 @@ echo "================================"
 
 
 (
+    sudo apt-get update && sudo apt-get install -y cuda-toolkit-12-9
     git clone https://github.com/thu-ml/SageAttention.git /SageAttention
     export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
-    sudo apt-get install -y cuda-libraries-dev-12-9
     echo "Downloading and installing SageAttention..."
     cd /SageAttention && python setup.py install &
     cd /SageAttention/sageattention3_blackwell && python setup.py install &

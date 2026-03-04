@@ -300,32 +300,32 @@ echo "================================"
         "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors?download=true"
     echo "✓ Low noise model downloaded"
 ) &
-# Download Lightning LoRAs
+# Download Lightning LoRAs T2V
 (
-    echo "Downloading Wan2.2-T2V-Lightning high_noise_model.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/high_noise_model.safetensors" \
-        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/high_noise_model.safetensors"
+    echo "Downloading Wan2.2-T2V High Noise Distill..."
+    wget -O "${BASE_DIR}/models/loras/wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors"
     echo "✓ High noise Lightning LoRA downloaded"
 ) &
 
 (
-    echo "Downloading Wan2.2-T2V-Lightning low_noise_model.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/low_noise_model.safetensors" \
-        "https://huggingface.co/lightx2v/Wan2.2-Lightning/resolve/main/Wan2.2-T2V-A14B-4steps-lora-rank64-Seko-V2.0/low_noise_model.safetensors"
+    echo "Downloading Wan2.2-T2V Low Noise Distill..."
+    wget -O "${BASE_DIR}/models/loras/wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors"
     echo "✓ Low noise Lightning LoRA downloaded"
 ) &
 # Download Lightning LoRAs
 (
     
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors" \
-        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors"
+    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors"
     echo "✓ High noise Lightning LoRA downloaded"
 ) &
 (
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors" \
-        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors"
+    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors"
     echo "✓ Low noise Lightning LoRA downloaded"
 ) &
 # Download text encoder

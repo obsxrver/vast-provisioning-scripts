@@ -214,16 +214,6 @@ echo "================================"
 mkdir -p "${BASE_DIR}/custom_nodes"
 cd "${BASE_DIR}/custom_nodes"
 
-# Install ComfyUI-Distributed
-if [ -d "ComfyUI-Distributed" ]; then
-    echo "Updating ComfyUI-Distributed..."
-    cd ComfyUI-Distributed
-    git pull
-    cd ..
-else
-    echo "Installing ComfyUI-Distributed..."
-    git clone https://github.com/obsxrver/ComfyUI-Distributed.git
-fi
 
 # Install ComfyUI-KJNodes
 if [ -d "ComfyUI-KJNodes" ]; then
@@ -236,16 +226,7 @@ else
     git clone https://github.com/kijai/ComfyUI-KJNodes.git
 fi
 
-# Install ComfyUI_StringOps
-if [ -d "ComfyUI_StringOps" ]; then
-    echo "Updating ComfyUI_StringOps..."
-    cd ComfyUI_StringOps
-    git pull
-    cd ..
-else
-    echo "Installing ComfyUI_StringOps..."
-    git clone https://github.com/MeeeyoAI/ComfyUI_StringOps
-fi
+
 sudo apt-get update
 
 # Install requirements for all custom nodes if they exist
@@ -289,32 +270,31 @@ echo "================================"
         "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors?download=true"
     echo "✓ Low noise model downloaded"
 ) &
-# Download I2Pee-V3
+#I2Pee_V4
 (
-    
-    echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors..."
+    echo "Downloading WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors..."
     wget -O "${BASE_DIR}/models/loras/WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors" \
-        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors"
-    echo "✓ High noise Lightning LoRA downloaded"
+        "https://huggingface.co/obsxrver/wan2.2-i2v-blink-piss/resolve/main/WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors"
+    echo "✓ WAN2.2-I2V_HighNoise_I2Pee-V4 downloaded"
 ) &
 (
-    echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/I2Pee-V3_Wan2.2_low.safetensors" \
-        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors"
-    echo "✓ Low noise Lightning LoRA downloaded"
+    echo "Downloading WAN2.2-I2V_LowNoise_I2Pee-V4.safetensors..."
+    wget -O "${BASE_DIR}/models/loras/WAN2.2-I2V_LowNoise_I2Pee-V4.safetensors" \
+        "https://huggingface.co/obsxrver/wan2.2-i2v-blink-piss/resolve/main/WAN2.2-I2V_LowNoise_I2Pee-V4.safetensors"
+    echo "✓ WAN2.2-I2V_LowNoise_I2Pee-V4 downloaded"
 ) &
 # Download Lightning LoRAs
 (
     
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors" \
-        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors"
+    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors"
     echo "✓ High noise Lightning LoRA downloaded"
 ) &
 (
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors" \
-        "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors"
+    wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors" \
+        "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors"
     echo "✓ Low noise Lightning LoRA downloaded"
 ) &
 # Download text encoder
@@ -335,12 +315,7 @@ echo "================================"
 
 
 (
-    sudo apt-get update && sudo apt-get install -y cuda-toolkit-12-9
-    git clone https://github.com/thu-ml/SageAttention.git /SageAttention
-    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
-    echo "Downloading and installing SageAttention..."
-    cd /SageAttention && python setup.py install &
-    cd /SageAttention/sageattention3_blackwell && python setup.py install &
+    pip install sageattention
 ) &
 
 # Wait for all downloads to complete

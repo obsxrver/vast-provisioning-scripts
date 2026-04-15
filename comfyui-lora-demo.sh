@@ -293,14 +293,14 @@ echo "================================"
 (
     
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors..."
-    wget -O "${BASE_DIR}/models/loras/I2Pee-V3_Wan2.2_high.safetensors" \
-        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/I2Pee-V3_Wan2.2_high.safetensors"
+    wget -O "${BASE_DIR}/models/loras/WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors" \
+        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors"
     echo "✓ High noise Lightning LoRA downloaded"
 ) &
 (
     echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors..."
     wget -O "${BASE_DIR}/models/loras/I2Pee-V3_Wan2.2_low.safetensors" \
-        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/I2Pee-V3_Wan2.2_low.safetensors"
+        "https://huggingface.co/obsxrver/wan2.2-i2v-piss/resolve/main/WAN2.2-I2V_HighNoise_I2Pee-V4.safetensors"
     echo "✓ Low noise Lightning LoRA downloaded"
 ) &
 # Download Lightning LoRAs

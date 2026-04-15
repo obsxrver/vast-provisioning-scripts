@@ -247,6 +247,26 @@ else
     git clone https://github.com/MeeeyoAI/ComfyUI_StringOps
 fi
 
+# Install ComfyUI-TBG-SAM3
+if [ -d "ComfyUI-Distributed" ]; then
+    echo "Updating ComfyUI-Distributed..."
+    cd ComfyUI-Distributed
+    git pull
+    cd ..
+else
+    echo "Installing ComfyUI-TBG-SAM3..."
+    git clone https://github.com/obsxrver/ComfyUI-TBG-SAM3.git
+fi
+# Install ComfyUI-Easy-Use
+if [ -d "ComfyUI-Easy-Use" ]; then
+    echo "Updating ComfyUI-Easy-Use..."
+    cd ComfyUI-Easy-Use
+    git pull
+    cd ..
+else
+    echo "Installing ComfyUI-Easy-Use..."
+    git clone https://github.com/yolain/ComfyUI-Easy-Use
+fi
 # Install requirements for all custom nodes if they exist
 echo "Checking for requirements.txt in all custom nodes..."
 for node_dir in */; do
@@ -317,13 +337,13 @@ echo "================================"
 # Download Lightning LoRAs
 (
     
-    echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors..."
+    echo "Downloading Wan2.2-I2V High Noise Distill..."
     wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors" \
         "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors"
     echo "✓ High noise Lightning LoRA downloaded"
 ) &
 (
-    echo "Downloading wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors..."
+    echo "Downloading Wan2.2-I2V Low Noise Distill..."
     wget -O "${BASE_DIR}/models/loras/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors" \
         "https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors"
     echo "✓ Low noise Lightning LoRA downloaded"
@@ -346,11 +366,8 @@ echo "================================"
 
 
 (
-    sudo apt-get update && sudo apt-get install -y cuda-toolkit-12-9
-    git clone https://github.com/thu-ml/SageAttention.git /SageAttention
-    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
-    cd /SageAttention && python setup.py install &
-    cd /SageAttention/sageattention3_blackwell && python setup.py install 
+    echo "Installing SageAttention"
+    pip install sageattention
 ) &
 # Wait for all downloads to complete
 wait

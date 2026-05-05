@@ -188,9 +188,7 @@ function install_extra_packages() {
     done
 }
 
-function wait_for_background_jobs() {
-    wait
-}
+
 function install_sageattention() {
     cd /
     git clone "https://github.com/thu-ml/SageAttention"
@@ -223,8 +221,8 @@ function provisioning_start() {
     download_models
     download_loras
     install_extra_packages
-    wait_for_background_jobs
     install_sageattention
+    wait
     print_download_summary
     provisioning_print_end
 }

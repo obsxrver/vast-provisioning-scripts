@@ -17,6 +17,7 @@ CUSTOM_NODE_REPOS=(
     "https://github.com/MeeeyoAI/ComfyUI_StringOps.git"
     "https://github.com/obsxrver/ComfyUI-TBG-SAM3.git"
     "https://github.com/yolain/ComfyUI-Easy-Use.git"
+    "https://github.com/cubiq/ComfyUI_essentials"
 )
 
 EXTRA_PIP_PACKAGES=(
@@ -190,7 +191,13 @@ function install_extra_packages() {
 function wait_for_background_jobs() {
     wait
 }
-
+function install_sageattention() {
+    cd /
+    git clone "https://github.com/thu-ml/SageAttention"
+    cd /SageAttention
+    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 # Optional
+    python setup.py install
+}
 function print_download_summary() {
     echo "================================"
     echo "All downloads completed successfully!"

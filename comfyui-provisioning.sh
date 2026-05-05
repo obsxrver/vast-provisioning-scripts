@@ -224,7 +224,7 @@ function provisioning_start() {
     download_loras
     install_extra_packages
     wait_for_background_jobs
-
+    install_sageattention
     print_download_summary
     provisioning_print_end
 }

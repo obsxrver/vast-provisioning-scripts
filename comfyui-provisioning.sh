@@ -10,7 +10,7 @@ DIFFUSION_MODELS_DIR="${COMFYUI_DIR}/models/diffusion_models"
 LORAS_DIR="${COMFYUI_DIR}/models/loras"
 TEXT_ENCODERS_DIR="${COMFYUI_DIR}/models/text_encoders"
 VAE_DIR="${COMFYUI_DIR}/models/vae"
-
+FRAME_INTERP_DIR="${COMFYUI_DIR}/models/frame_interpolation"
 CUSTOM_NODE_REPOS=(
     "https://github.com/obsxrver/ComfyUI-Distributed.git"
     "https://github.com/kijai/ComfyUI-KJNodes.git"
@@ -32,6 +32,7 @@ MODEL_DOWNLOADS=(
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors|https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors?download=true|Wan 2.2 I2V low noise model"
     "${TEXT_ENCODERS_DIR}|umt5_xxl_fp8_e4m3fn_scaled.safetensors|https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors?download=true|UMT5 text encoder"
     "${VAE_DIR}|wan_2.1_vae.safetensors|https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true|Wan 2.1 VAE"
+    "${FRAME_INTERP_DIR}|rife_v4.25_heavy.safetensors|https://huggingface.co/Comfy-Org/frame_interpolation/resolve/6475b9bb5a8a9a8bd4c471d6adea35ebe594e9dd/frame_interpolation/rife_v4.25_heavy.safetensors|RIFE 4.25 Heavy"
 )
 
 LORA_DOWNLOADS=(

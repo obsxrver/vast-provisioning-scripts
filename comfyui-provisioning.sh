@@ -199,6 +199,42 @@ function install_sageattention() {
     export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 # Optional
     python setup.py install &
 }
+
+function create_start_comfyui_script() {
+    cat > /workspace/start_comfyui.sh <<'EOF'
+#!/bin/bash
+
+set -e
+
+source /venv/main/bin/activate
+
+supervisorctl stop comfyui || true
+pgrep -f main.py | xargs -r kill -9
+
+cuda_device_count="$(python - <<'PY'
+import torch
+
+print(torch.cuda.device_count())
+PY
+)"
+
+if [[ "${cuda_device_count}" -lt 1 ]]; then
+    echo "No CUDA devices found"
+    exit 1
+fi
+
+cd /workspace
+
+python /workspace/ComfyUI/main.py --cuda-device 0 --port 18188 > comfyui-0.log 2>&1 &
+
+for ((i = 1; i < cuda_device_count; i++)); do
+    python /workspace/ComfyUI/main.py --cuda-device "${i}" --port "$((8188 + i))" > "comfyui-${i}.log" 2>&1 &
+done
+EOF
+
+    chmod +x /workspace/start_comfyui.sh
+}
+
 function print_download_summary() {
     echo "================================"
     echo "All downloads completed successfully!"
@@ -215,6 +251,7 @@ function provisioning_start() {
     update_comfyui
     install_custom_nodes
     ensure_model_directories
+    create_start_comfyui_script
 
     echo ""
     echo "================================"

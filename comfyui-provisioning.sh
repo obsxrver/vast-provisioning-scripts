@@ -251,6 +251,7 @@ function provisioning_start() {
     update_comfyui
     install_custom_nodes
     ensure_model_directories
+    sed -i 's|COMFYUI_ARGS=${COMFYUI_ARGS:---disable-auto-launch --port 18188 --enable-cors-header}|COMFYUI_ARGS=${COMFYUI_ARGS:---disable-auto-launch --port 18188 --enable-cors-header --cuda-device 0}|' /opt/supervisor-scripts/comfyui.sh
     create_start_comfyui_script
 
     echo ""

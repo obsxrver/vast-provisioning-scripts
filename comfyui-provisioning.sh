@@ -32,7 +32,7 @@ MODEL_DOWNLOADS=(
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_low_int8_convrot.safetensors|https://huggingface.co/obsxrver/ComfyUI-Native-INT8_ConvRot/resolve/main/wan2.2_i2v_low_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot low noise model"
     "${TEXT_ENCODERS_DIR}|nsfw_wan_umt5-xxl_bf16_fixed.safetensors|https://huggingface.co/zootkitty/nsfw_wan_umt5-xxl_bf16_fixed/resolve/main/nsfw_wan_umt5-xxl_bf16_fixed.safetensors|UMT5 NSFW BF16 text encoder"
     "${VAE_DIR}|wan_2.1_vae.safetensors|https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true|Wan 2.1 VAE"
-    "${FRAME_INTERP_DIR}|film_net_fp16.safetensors|https://huggingface.co/Comfy-Org/frame_interpolation/resolve/main/frame_interpolation/film_net_fp16.safetensors|FilmNet FP16"
+    "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|https://huggingface.co/Comfy-Org/frame_interpolation/resolve/main/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
 )
 
 LORA_DOWNLOADS=(

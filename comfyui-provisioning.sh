@@ -26,21 +26,21 @@ EXTRA_PIP_PACKAGES=(
 
 # Entry format: target_dir|filename|url|label
 MODEL_DOWNLOADS=(
-    #"${DIFFUSION_MODELS_DIR}|wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V high noise model"
-    #"${DIFFUSION_MODELS_DIR}|wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V low noise model"
-    "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_high_int8_convrot.safetensors|https://huggingface.co/obsxrver/ComfyUI-Native-INT8_ConvRot/resolve/main/wan2.2_i2v_high_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot high noise model"
-    "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_low_int8_convrot.safetensors|https://huggingface.co/obsxrver/ComfyUI-Native-INT8_ConvRot/resolve/main/wan2.2_i2v_low_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot low noise model"
-    "${TEXT_ENCODERS_DIR}|nsfw_wan_umt5-xxl_bf16_fixed.safetensors|https://huggingface.co/zootkitty/nsfw_wan_umt5-xxl_bf16_fixed/resolve/main/nsfw_wan_umt5-xxl_bf16_fixed.safetensors|UMT5 NSFW BF16 text encoder"
-    "${VAE_DIR}|wan_2.1_vae.safetensors|https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true|Wan 2.1 VAE"
-    "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|https://huggingface.co/Comfy-Org/frame_interpolation/resolve/main/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
+    #"${DIFFUSION_MODELS_DIR}|wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|hf://Comfy-Org/Wan_2.2_ComfyUI_Repackaged/split_files/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V high noise model"
+    #"${DIFFUSION_MODELS_DIR}|wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|hf://Comfy-Org/Wan_2.2_ComfyUI_Repackaged/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V low noise model"
+    "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_high_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/wan2.2_i2v_high_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot high noise model"
+    "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_low_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/wan2.2_i2v_low_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot low noise model"
+    "${TEXT_ENCODERS_DIR}|nsfw_wan_umt5-xxl_bf16_fixed.safetensors|hf://zootkitty/nsfw_wan_umt5-xxl_bf16_fixed/nsfw_wan_umt5-xxl_bf16_fixed.safetensors|UMT5 NSFW BF16 text encoder"
+    "${VAE_DIR}|Wan2_1_VAE_bf16.safetensors|hf://Kijai/WanVideo_comfy/Wan2_1_VAE_bf16.safetensors|Wan 2.1 VAE"
+    "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
 )
 
 LORA_DOWNLOADS=(
-    #"${LORAS_DIR}|wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V high noise Lightning LoRA"
-    #"${LORAS_DIR}|wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V low noise Lightning LoRA"
-    "${LORAS_DIR}|wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors|https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors|Wan 2.2 I2V high noise Lightning LoRA"
-    "${LORAS_DIR}|wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors|https://huggingface.co/lightx2v/Wan2.2-Distill-Loras/resolve/main/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors|Wan 2.2 I2V low noise Lightning LoRA"
-    "${LORAS_DIR}|wan2.2_i2v_A14b_low_noise_lora_lightx2v_4step_720p_260412.safetensors|https://huggingface.co/obsxrver/wan2.2-i2v-lightx2v-260412/resolve/main/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_720p_260412.safetensors|Wan 2.2 I2V low noise Lightning LoRA 260412"
+    #"${LORAS_DIR}|wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V high noise Lightning LoRA"
+    #"${LORAS_DIR}|wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V low noise Lightning LoRA"
+    "${LORAS_DIR}|wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors|Wan 2.2 I2V high noise Lightning LoRA"
+    "${LORAS_DIR}|wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors|Wan 2.2 I2V low noise Lightning LoRA"
+    "${LORAS_DIR}|wan2.2_i2v_A14b_low_noise_lora_lightx2v_4step_720p_260412.safetensors|hf://obsxrver/wan2.2-i2v-lightx2v-260412/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_720p_260412.safetensors|Wan 2.2 I2V low noise Lightning LoRA 260412"
 )
 
 function provisioning_print_header() {
@@ -59,13 +59,15 @@ function provisioning_download() {
 
     mkdir -p "$target_dir"
 
-    if [[ -n $HF_TOKEN && $url =~ ^https://([a-zA-Z0-9_-]+\.)?huggingface\.co(/|$|\?) ]]; then
+    if [[ -n $HF_TOKEN && $url =~ ^hf://([a-zA-Z0-9_-]+\.)?huggingface\.co(/|$|\?) ]]; then
         auth_token="$HF_TOKEN"
-    elif [[ -n $CIVITAI_TOKEN && $url =~ ^https://([a-zA-Z0-9_-]+\.)?civitai\.com(/|$|\?) ]]; then
+    elif [[ -n $CIVITAI_TOKEN && $url =~ ^hf://([a-zA-Z0-9_-]+\.)?civitai\.com(/|$|\?) ]]; then
         auth_token="$CIVITAI_TOKEN"
     fi
-
-    if [[ -n $auth_token ]]; then
+    #HF token not needed since all repos public.
+    if [[ $url == hf://* ]]; then
+        hf download $url --local-dir "${target_dir}/${filename}"
+    elif [[ -n $auth_token ]]; then
         wget --header="Authorization: Bearer $auth_token" -qnc --show-progress -e dotbytes="4M" -O "${target_dir}/${filename}" "$url"
     else
         wget -qnc --show-progress -e dotbytes="4M" -O "${target_dir}/${filename}" "$url"
@@ -247,8 +249,10 @@ function print_download_summary() {
 }
 
 function provisioning_start() {
+    
     provisioning_print_header
     update_comfyui
+    uv pip install -U huggingface_hub
     install_custom_nodes
     ensure_model_directories
     sed -i 's|COMFYUI_ARGS=${COMFYUI_ARGS:---disable-auto-launch --port 18188 --enable-cors-header}|COMFYUI_ARGS=${COMFYUI_ARGS:---disable-auto-launch --port 18188 --enable-cors-header --cuda-device 0}|' /opt/supervisor-scripts/comfyui.sh

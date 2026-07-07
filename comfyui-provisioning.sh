@@ -252,18 +252,17 @@ function provisioning_start() {
     
     provisioning_print_header
     update_comfyui
-    uv pip install -U huggingface_hub
+    
     install_custom_nodes
     ensure_model_directories
-    sed -i 's|COMFYUI_ARGS=${COMFYUI_ARGS:---disable-auto-launch --port 18188 --enable-cors-header}|COMFYUI_ARGS=${COMFYUI_ARGS:---disable-auto-launch --port 18188 --enable-cors-header --cuda-device 0}|' /opt/supervisor-scripts/comfyui.sh
-    supervisorctl reload
+
     create_start_comfyui_script
 
     echo ""
     echo "================================"
     echo "Starting parallel model downloads..."
     echo "================================"
-
+    uv pip install -U huggingface_hub
     download_models
     download_loras
     install_extra_packages

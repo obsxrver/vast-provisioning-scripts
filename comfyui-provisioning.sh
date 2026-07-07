@@ -66,7 +66,7 @@ function provisioning_download() {
     fi
     #HF token not needed since all repos public.
     if [[ $url == hf://* ]]; then
-        hf download $url --local-dir "${target_dir}/${filename}"
+        hf download $url --local-dir $target_dir
     elif [[ -n $auth_token ]]; then
         wget --header="Authorization: Bearer $auth_token" -qnc --show-progress -e dotbytes="4M" -O "${target_dir}/${filename}" "$url"
     else

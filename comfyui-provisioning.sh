@@ -22,6 +22,7 @@ CUSTOM_NODE_REPOS=(
 
 EXTRA_PIP_PACKAGES=(
     "sageattention"
+    "sam3"
 )
 
 # Entry format: target_dir|filename|url|label

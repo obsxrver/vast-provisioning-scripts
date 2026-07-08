@@ -176,6 +176,9 @@ function queue_downloads() {
 }
 
 function download_models() {
+    if [[ -n $HF_TOKEN ]];then
+        hf auth login --token $HF_TOKEN
+    fi
     queue_downloads "${MODEL_DOWNLOADS[@]}"
 }
 

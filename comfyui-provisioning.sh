@@ -191,7 +191,7 @@ function install_extra_packages() {
     for package in "${EXTRA_PIP_PACKAGES[@]}"; do
         (
             echo "Installing ${package}..."
-            pip install "${package}"
+            uv pip install -U "${package}"
         ) &
     done
 }

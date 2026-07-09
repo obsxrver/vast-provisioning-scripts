@@ -34,7 +34,7 @@ MODEL_DOWNLOADS=(
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_high_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/diffusion_models/wan2.2_i2v_high_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot high noise model"
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_low_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/diffusion_models/wan2.2_i2v_low_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot low noise model"
     "${TEXT_ENCODERS_DIR}|nsfw_wan_umt5-xxl_bf16_fixed.safetensors|hf://zootkitty/nsfw_wan_umt5-xxl_bf16_fixed/nsfw_wan_umt5-xxl_bf16_fixed.safetensors|UMT5 NSFW BF16 text encoder"
-    "${VAE_DIR}|Wan2_1_VAE_bf16.safetensors|hf://Kijai/WanVideo_comfy/Wan2_1_VAE_bf16.safetensors|Wan 2.1 VAE"
+    "${VAE_DIR}|Wan2_1_VAE_fp32.safetensors|hf://Kijai/WanVideo_comfy/Wan2_1_VAE_fp32.safetensors|Wan 2.1 VAE FP32"
     "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
 )
 

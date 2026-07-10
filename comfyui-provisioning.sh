@@ -257,6 +257,8 @@ function print_download_summary() {
 function provisioning_start() {
     
     provisioning_print_header
+    #uninstall old comfyui frontend package to fix deprecated import errors.
+    uv pip uninstall comfyui_frontend_package
     update_comfyui
     
     install_custom_nodes

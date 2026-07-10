@@ -19,6 +19,7 @@ CUSTOM_NODE_REPOS=(
     "https://github.com/cubiq/ComfyUI_essentials"
     "https://github.com/obsxrver/ComfyUI-MultiGPU-Orchestrator.git"
     "https://github.com/ClownsharkBatwing/RES4LYF"
+    "https://github.com/obsxrver/ComfyUI-VideoAssetNavigationFix"
 )
 
 EXTRA_PIP_PACKAGES=(

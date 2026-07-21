@@ -34,7 +34,7 @@ MODEL_DOWNLOADS=(
     #"${DIFFUSION_MODELS_DIR}|wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|hf://Comfy-Org/Wan_2.2_ComfyUI_Repackaged/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V low noise model"
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_high_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/diffusion_models/wan2.2_i2v_high_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot high noise model"
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_low_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/diffusion_models/wan2.2_i2v_low_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot low noise model"
-    "${TEXT_ENCODERS_DIR}|nsfw_wan_umt5-xxl_bf16_fixed.safetensors|hf://zootkitty/nsfw_wan_umt5-xxl_bf16_fixed/nsfw_wan_umt5-xxl_bf16_fixed.safetensors|UMT5 NSFW BF16 text encoder"
+    "${TEXT_ENCODERS_DIR}|umt5_xxl_fp16.safetensors|hf://Comfy-Org/Wan_2.1_ComfyUI_repackaged/split_files/text_encoders/umt5_xxl_fp16.safetensors|UMT5 XXL FP16 text encoder"
     "${VAE_DIR}|Wan2_1_VAE_fp32.safetensors|hf://Kijai/WanVideo_comfy/Wan2_1_VAE_fp32.safetensors|Wan 2.1 VAE FP32"
     "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
 )

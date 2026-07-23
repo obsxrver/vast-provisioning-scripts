@@ -23,7 +23,6 @@ CUSTOM_NODE_REPOS=(
 )
 
 EXTRA_PIP_PACKAGES=(
-    "sageattention"
     "sam3"
     "PyOpenGL-accelerate"
 )

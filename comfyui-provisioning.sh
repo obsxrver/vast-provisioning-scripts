@@ -201,7 +201,9 @@ function install_extra_packages() {
 
 
 function install_sageattention() {
-    sudo apt-get install -y nvidia-cuda-toolkit
+    if ! sudo apt-get install -y nvidia-cuda-toolkit; then
+        echo "Warning: Failed to install nvidia-cuda-toolkit; continuing with SageAttention installation."
+    fi
     cd /
     git clone "https://github.com/thu-ml/SageAttention"
     cd /SageAttention

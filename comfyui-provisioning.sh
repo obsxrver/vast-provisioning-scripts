@@ -261,8 +261,11 @@ function provisioning_start() {
     provisioning_print_header
     #uninstall old comfyui frontend package to fix deprecated import errors.
     rm -rf "${CUSTOM_NODES_DIR}/ComfyUI-Manager" #Remove the old manager
-    uv pip uninstall comfyui_frontend_package
-    update_comfyui
+    # uv pip uninstall comfyui_frontend_package
+    # uv pip install comfyui_frontend_package
+    # update_comfyui
+    #use stable version of comfyui instead of changing to nightly
+    
     uv pip install -r "${COMFYUI_DIR}/manager_requirements.txt"
     install_custom_nodes
     ensure_model_directories

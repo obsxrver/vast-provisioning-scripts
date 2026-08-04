@@ -200,15 +200,31 @@ function install_extra_packages() {
 
 
 function install_sageattention() {
-    apt-get update
-    if ! sudo apt-get install -y cuda-toolkit; then
-        echo "Warning: Failed to install cuda-toolkit; continuing with SageAttention installation."
+    python3 -m pip uninstall -y torch torchvision torchaudio
+
+    local cuda_version
+    local cuda_toolkit_package
+    cuda_version="$(nvidia-smi | sed -n 's/.*CUDA Version: \([0-9][0-9]*\.[0-9][0-9]*\).*/\1/p' | head -n 1)"
+
+    if [[ -z "${cuda_version}" ]]; then
+        echo "Error: Could not detect the maximum supported CUDA version from nvidia-smi."
+        return 1
     fi
+
+    cuda_toolkit_package="cuda-toolkit-${cuda_version//./-}"
+    echo "Installing ${cuda_toolkit_package} for the driver-reported CUDA ${cuda_version} maximum..."
+    sudo apt-get update
+    sudo apt-get install -y "${cuda_toolkit_package}"
+
+    python3 -m pip install torch torchvision torchaudio
+
     cd /
     git clone "https://github.com/thu-ml/SageAttention"
     cd /SageAttention
     export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 # Optional
-    python setup.py install &
+    python3 -m pip install --no-build-isolation --no-deps --force-reinstall -e .
+
+    echo COMFYUI_MGPU_WORKER_FLAGS="--use-sage-attention" >> /workspace/.env
 }
 
 function create_start_comfyui_script() {
@@ -280,8 +296,8 @@ function provisioning_start() {
     uv pip install -U huggingface_hub
     download_models
     download_loras
-    install_extra_packages
     install_sageattention
+    install_extra_packages
     wait
     print_download_summary
     provisioning_print_end

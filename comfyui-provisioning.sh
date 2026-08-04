@@ -11,6 +11,12 @@ LORAS_DIR="${COMFYUI_DIR}/models/loras"
 TEXT_ENCODERS_DIR="${COMFYUI_DIR}/models/text_encoders"
 VAE_DIR="${COMFYUI_DIR}/models/vae"
 FRAME_INTERP_DIR="${COMFYUI_DIR}/models/frame_interpolation"
+
+# Comma-separated model groups: WANT2V, WANI2V, H3.
+# Example: MODEL_DOWNLOAD_GROUPS="WANT2V,WANI2V, H3"
+# Keep the existing Wan I2V download behavior when the variable is not configured.
+MODEL_DOWNLOAD_GROUPS="${MODEL_DOWNLOAD_GROUPS:-WANI2V}"
+
 CUSTOM_NODE_REPOS=(
     "https://github.com/kijai/ComfyUI-KJNodes.git"
     "https://github.com/MeeeyoAI/ComfyUI_StringOps.git"
@@ -28,23 +34,43 @@ EXTRA_PIP_PACKAGES=(
 )
 
 # Entry format: target_dir|filename|url|label
-MODEL_DOWNLOADS=(
-    #"${DIFFUSION_MODELS_DIR}|wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|hf://Comfy-Org/Wan_2.2_ComfyUI_Repackaged/split_files/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V high noise model"
-    #"${DIFFUSION_MODELS_DIR}|wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|hf://Comfy-Org/Wan_2.2_ComfyUI_Repackaged/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V low noise model"
+WAN_T2V_MODEL_DOWNLOADS=(
+    "${DIFFUSION_MODELS_DIR}|wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|hf://Comfy-Org/Wan_2.2_ComfyUI_Repackaged/split_files/diffusion_models/wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V high noise model"
+    "${DIFFUSION_MODELS_DIR}|wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|hf://Comfy-Org/Wan_2.2_ComfyUI_Repackaged/split_files/diffusion_models/wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors|Wan 2.2 T2V low noise model"
+)
+
+WAN_I2V_MODEL_DOWNLOADS=(
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_high_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/diffusion_models/wan2.2_i2v_high_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot high noise model"
     "${DIFFUSION_MODELS_DIR}|wan2.2_i2v_low_int8_convrot.safetensors|hf://obsxrver/ComfyUI-Native-INT8_ConvRot/diffusion_models/wan2.2_i2v_low_int8_convrot.safetensors|Wan 2.2 I2V Int8ConvRot low noise model"
+)
+
+WAN_SHARED_MODEL_DOWNLOADS=(
     "${TEXT_ENCODERS_DIR}|umt5_xxl_fp16.safetensors|hf://Comfy-Org/Wan_2.1_ComfyUI_repackaged/split_files/text_encoders/umt5_xxl_fp16.safetensors|UMT5 XXL FP16 text encoder"
     "${VAE_DIR}|Wan2_1_VAE_fp32.safetensors|hf://Kijai/WanVideo_comfy/Wan2_1_VAE_fp32.safetensors|Wan 2.1 VAE FP32"
     "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
 )
 
-LORA_DOWNLOADS=(
-    #"${LORAS_DIR}|wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V high noise Lightning LoRA"
-    #"${LORAS_DIR}|wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V low noise Lightning LoRA"
+H3_MODEL_DOWNLOADS=(
+    "${DIFFUSION_MODELS_DIR}|minimax_h3_fl2va_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/diffusion_models/minimax_h3_fl2va_int8_convrot.safetensors|MiniMax H3 FL2VA Int8ConvRot model"
+    "${DIFFUSION_MODELS_DIR}|minimax_h3_ref2va_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/diffusion_models/minimax_h3_ref2va_int8_convrot.safetensors|MiniMax H3 Ref2VA Int8ConvRot model"
+    "${TEXT_ENCODERS_DIR}|qwen3vl_32b_minimax_h3_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors|MiniMax H3 Qwen3-VL 32B Int8ConvRot text encoder"
+    "${VAE_DIR}|minimax_h3_audio_vae_fp32.safetensors|hf://Comfy-Org/MiniMax-H3/vae/minimax_h3_audio_vae_fp32.safetensors|MiniMax H3 audio VAE FP32"
+    "${VAE_DIR}|minimax_h3_video_vae_fp16.safetensors|hf://Comfy-Org/MiniMax-H3/vae/minimax_h3_video_vae_fp16.safetensors|MiniMax H3 video VAE FP16"
+)
+
+WAN_T2V_LORA_DOWNLOADS=(
+    "${LORAS_DIR}|wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_t2v_A14b_high_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V high noise Lightning LoRA"
+    "${LORAS_DIR}|wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_t2v_A14b_low_noise_lora_rank64_lightx2v_4step_1217.safetensors|Wan 2.2 T2V low noise Lightning LoRA"
+)
+
+WAN_I2V_LORA_DOWNLOADS=(
     "${LORAS_DIR}|wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_i2v_A14b_high_noise_lora_rank64_lightx2v_4step_1022.safetensors|Wan 2.2 I2V high noise Lightning LoRA"
     "${LORAS_DIR}|wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors|hf://lightx2v/Wan2.2-Distill-Loras/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors|Wan 2.2 I2V low noise Lightning LoRA"
     "${LORAS_DIR}|wan2.2_i2v_A14b_low_noise_lora_lightx2v_4step_720p_260412.safetensors|hf://obsxrver/wan2.2-i2v-lightx2v-260412/wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_720p_260412.safetensors|Wan 2.2 I2V low noise Lightning LoRA 260412"
 )
+
+MODEL_DOWNLOADS=()
+LORA_DOWNLOADS=()
 
 function provisioning_print_header() {
     printf "\n##############################################\n#                                            #\n#          Provisioning container            #\n#                                            #\n#         This will take some time           #\n#                                            #\n# Your container will be ready on completion #\n#                                            #\n##############################################\n\n"
@@ -88,12 +114,75 @@ function update_comfyui() {
     fi
 
     cd "${COMFYUI_DIR}"
+    echo "Fetching the latest master branch..."
+    git fetch origin master
     echo "Checking out master branch..."
     git checkout master
-    echo "Pulling latest changes..."
-    git pull
+    echo "Updating to the latest origin/master..."
+    git pull --ff-only origin master
     echo "Installing/updating requirements..."
     pip install -r requirements.txt
+}
+
+function select_download_groups() {
+    local requested_group
+    local -a requested_groups
+    local want2v_selected=false
+    local wani2v_selected=false
+    local h3_selected=false
+
+    MODEL_DOWNLOADS=()
+    LORA_DOWNLOADS=()
+
+    IFS=',' read -r -a requested_groups <<< "${MODEL_DOWNLOAD_GROUPS}"
+    for requested_group in "${requested_groups[@]}"; do
+        requested_group="${requested_group//[[:space:]]/}"
+        requested_group="${requested_group^^}"
+
+        case "${requested_group}" in
+            WANT2V)
+                want2v_selected=true
+                ;;
+            WANI2V)
+                wani2v_selected=true
+                ;;
+            H3)
+                h3_selected=true
+                ;;
+            "")
+                ;;
+            *)
+                echo "Error: Unknown model download group '${requested_group}'."
+                echo "Valid groups: WANT2V, WANI2V, H3"
+                return 1
+                ;;
+        esac
+    done
+
+    if [[ "${want2v_selected}" == false && "${wani2v_selected}" == false && "${h3_selected}" == false ]]; then
+        echo "Error: MODEL_DOWNLOAD_GROUPS must contain at least one of: WANT2V, WANI2V, H3"
+        return 1
+    fi
+
+    if [[ "${want2v_selected}" == true ]]; then
+        MODEL_DOWNLOADS+=("${WAN_T2V_MODEL_DOWNLOADS[@]}")
+        LORA_DOWNLOADS+=("${WAN_T2V_LORA_DOWNLOADS[@]}")
+    fi
+
+    if [[ "${wani2v_selected}" == true ]]; then
+        MODEL_DOWNLOADS+=("${WAN_I2V_MODEL_DOWNLOADS[@]}")
+        LORA_DOWNLOADS+=("${WAN_I2V_LORA_DOWNLOADS[@]}")
+    fi
+
+    if [[ "${want2v_selected}" == true || "${wani2v_selected}" == true ]]; then
+        MODEL_DOWNLOADS+=("${WAN_SHARED_MODEL_DOWNLOADS[@]}")
+    fi
+
+    if [[ "${h3_selected}" == true ]]; then
+        MODEL_DOWNLOADS+=("${H3_MODEL_DOWNLOADS[@]}")
+    fi
+
+    echo "Selected model download groups: ${MODEL_DOWNLOAD_GROUPS}"
 }
 
 function install_custom_node_requirements() {
@@ -276,12 +365,12 @@ function print_download_summary() {
 function provisioning_start() {
     
     provisioning_print_header
+    select_download_groups
     #uninstall old comfyui frontend package to fix deprecated import errors.
     rm -rf "${CUSTOM_NODES_DIR}/ComfyUI-Manager" #Remove the old manager
     # uv pip uninstall comfyui_frontend_package
     # uv pip install comfyui_frontend_package
-    # update_comfyui
-    #use stable version of comfyui instead of changing to nightly
+    update_comfyui
     
     uv pip install -r "${COMFYUI_DIR}/manager_requirements.txt"
     install_custom_nodes

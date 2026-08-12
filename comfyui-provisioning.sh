@@ -26,6 +26,7 @@ CUSTOM_NODE_REPOS=(
     "https://github.com/obsxrver/ComfyUI-MultiGPU-Orchestrator.git"
     "https://github.com/ClownsharkBatwing/RES4LYF"
     "https://github.com/obsxrver/ComfyUI-VideoAssetNavigationFix"
+    "https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo"
 )
 
 EXTRA_PIP_PACKAGES=(

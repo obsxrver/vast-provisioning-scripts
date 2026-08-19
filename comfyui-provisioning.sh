@@ -379,6 +379,7 @@ function provisioning_start() {
     ensure_model_directories
 
     create_start_comfyui_script
+    echo 'COMFYUI_MGPU_WORKER_FLAGS="--use-ck-attention --disable-pinned-memory"' >> /workspace/.env
 
     echo ""
     echo "================================"
@@ -387,7 +388,7 @@ function provisioning_start() {
     uv pip install -U huggingface_hub
     download_models
     download_loras
-    install_sageattention
+    #install_sageattention
     install_extra_packages
     wait
     print_download_summary

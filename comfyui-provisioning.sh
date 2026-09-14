@@ -14,8 +14,8 @@ FRAME_INTERP_DIR="${COMFYUI_DIR}/models/frame_interpolation"
 
 # Comma-separated model groups: WANT2V, WANI2V, H3.
 # Example: MODEL_DOWNLOAD_GROUPS="WANT2V,WANI2V, H3"
-# Keep the existing Wan I2V download behavior when the variable is not configured.
-MODEL_DOWNLOAD_GROUPS="${MODEL_DOWNLOAD_GROUPS:-WANI2V}"
+# Default group MiniMax H3.
+MODEL_DOWNLOAD_GROUPS="${MODEL_DOWNLOAD_GROUPS:-H3}"
 
 CUSTOM_NODE_REPOS=(
     "https://github.com/kijai/ComfyUI-KJNodes.git"
@@ -30,7 +30,6 @@ CUSTOM_NODE_REPOS=(
 )
 
 EXTRA_PIP_PACKAGES=(
-    "sam3"
     "PyOpenGL-accelerate"
 )
 

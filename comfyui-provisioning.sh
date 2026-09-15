@@ -2,9 +2,8 @@
 
 set -e
 
-source /venv/main/bin/activate
-
-COMFYUI_DIR="${WORKSPACE:-/workspace}/ComfyUI"
+WORKSPACE="${WORKSPACE:-/workspace}"
+COMFYUI_DIR="${WORKSPACE}/ComfyUI"
 CUSTOM_NODES_DIR="${COMFYUI_DIR}/custom_nodes"
 DIFFUSION_MODELS_DIR="${COMFYUI_DIR}/models/diffusion_models"
 LORAS_DIR="${COMFYUI_DIR}/models/loras"
@@ -47,7 +46,7 @@ WAN_I2V_MODEL_DOWNLOADS=(
 WAN_SHARED_MODEL_DOWNLOADS=(
     "${TEXT_ENCODERS_DIR}|umt5_xxl_fp16.safetensors|hf://Comfy-Org/Wan_2.1_ComfyUI_repackaged/split_files/text_encoders/umt5_xxl_fp16.safetensors|UMT5 XXL FP16 text encoder"
     "${VAE_DIR}|Wan2_1_VAE_fp32.safetensors|hf://Kijai/WanVideo_comfy/Wan2_1_VAE_fp32.safetensors|Wan 2.1 VAE FP32"
-    "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
+    "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavy"
 )
 
 H3_FLF2V_MODEL_DOWNLOAD=(
@@ -78,6 +77,7 @@ WAN_I2V_LORA_DOWNLOADS=(
 
 MODEL_DOWNLOADS=()
 LORA_DOWNLOADS=()
+BACKGROUND_PIDS=()
 
 function provisioning_print_header() {
     printf "\n##############################################\n#                                            #\n#          Provisioning container            #\n#                                            #\n#         This will take some time           #\n#                                            #\n# Your container will be ready on completion #\n#                                            #\n##############################################\n\n"
@@ -92,22 +92,39 @@ function provisioning_download() {
     local target_dir="$2"
     local filename="$3"
     local auth_token=""
+    local destination="${target_dir}/${filename}"
+    local downloaded_path
+    local -a wget_args=()
 
     mkdir -p "$target_dir"
 
-    if [[ -n $HF_TOKEN && $url =~ ^hf://([a-zA-Z0-9_-]+\.)?huggingface\.co(/|$|\?) ]]; then
+    if [[ -s "$destination" ]]; then
+        echo "Already downloaded: ${destination}"
+        return 0
+    fi
+
+    if [[ $url == hf://* ]]; then
+        # Stage on the same filesystem, then move the completed file to its
+        # configured name. --local-dir preserves the repository's subfolders.
+        downloaded_path="$(hf download "$url" --local-dir "${target_dir}/.downloads/${filename}" --quiet)" || return 1
+        if [[ ! -s "$downloaded_path" ]]; then
+            echo "Error: No downloaded file returned for ${url}" >&2
+            return 1
+        fi
+        mv -- "$downloaded_path" "$destination"
+        return
+    fi
+
+    if [[ -n ${HF_TOKEN:-} && $url =~ ^https?://([a-zA-Z0-9_-]+\.)?huggingface\.co(/|$|\?) ]]; then
         auth_token="$HF_TOKEN"
-    elif [[ -n $CIVITAI_TOKEN && $url =~ ^hf://([a-zA-Z0-9_-]+\.)?civitai\.com(/|$|\?) ]]; then
+    elif [[ -n ${CIVITAI_TOKEN:-} && $url =~ ^https?://([a-zA-Z0-9_-]+\.)?civitai\.com(/|$|\?) ]]; then
         auth_token="$CIVITAI_TOKEN"
     fi
-    #HF token not needed since all repos public.
-    if [[ $url == hf://* ]]; then
-        hf download $url --local-dir $target_dir
-    elif [[ -n $auth_token ]]; then
-        wget --header="Authorization: Bearer $auth_token" -qnc --show-progress -e dotbytes="4M" -O "${target_dir}/${filename}" "$url"
-    else
-        wget -qnc --show-progress -e dotbytes="4M" -O "${target_dir}/${filename}" "$url"
+    if [[ -n $auth_token ]]; then
+        wget_args+=(--header="Authorization: Bearer $auth_token")
     fi
+    wget "${wget_args[@]}" -c -q --show-progress -e dotbytes="4M" -O "${destination}.part" "$url" || return 1
+    mv -- "${destination}.part" "$destination"
 }
 
 function update_comfyui() {
@@ -163,14 +180,14 @@ function select_download_groups() {
                 ;;
             *)
                 echo "Error: Unknown model download group '${requested_group}'."
-                echo "Valid groups: WANT2V, WANI2V, H3REF, H3FLF"
+                echo "Valid groups: WANT2V, WANI2V, H3_REF2V, H3_FLF2V"
                 return 1
                 ;;
         esac
     done
 
     if [[ "${want2v_selected}" == false && "${wani2v_selected}" == false && "${h3ref_selected}" == false && "${h3flf_selected}" == false ]]; then
-        echo "Error: MODEL_DOWNLOAD_GROUPS must contain at least one of: WANT2V, WANI2V, H3FLF2V, H3REF2V"
+        echo "Error: MODEL_DOWNLOAD_GROUPS must contain at least one of: WANT2V, WANI2V, H3_REF2V, H3_FLF2V"
         return 1
     fi
 
@@ -188,7 +205,7 @@ function select_download_groups() {
         MODEL_DOWNLOADS+=("${WAN_SHARED_MODEL_DOWNLOADS[@]}")
     fi
 
-    if [["${h3ref_selected}" == true || "${h3flf_selected}" == true]]; then
+    if [[ "${h3ref_selected}" == true || "${h3flf_selected}" == true ]]; then
         MODEL_DOWNLOADS+=("${H3_SHARED_MODEL_DOWNLOADS[@]}")
     fi
     
@@ -261,6 +278,7 @@ function ensure_model_directories() {
     mkdir -p "${LORAS_DIR}"
     mkdir -p "${TEXT_ENCODERS_DIR}"
     mkdir -p "${VAE_DIR}"
+    mkdir -p "${FRAME_INTERP_DIR}"
 }
 
 function download_asset() {
@@ -270,24 +288,23 @@ function download_asset() {
     local label="$4"
 
     echo "Downloading ${label}..."
-    provisioning_download "${url}" "${target_dir}" "${filename}"
+    provisioning_download "${url}" "${target_dir}" "${filename}" || return 1
     echo "✓ ${label} downloaded"
 }
 
 function queue_downloads() {
-    local download
+    local download target_dir filename url label
     for download in "$@"; do
         IFS='|' read -r target_dir filename url label <<< "${download}"
         (
             download_asset "${target_dir}" "${filename}" "${url}" "${label}"
         ) &
+        BACKGROUND_PIDS+=("$!")
     done
 }
 
 function download_models() {
-    if [[ -n $HF_TOKEN ]];then
-        hf auth login --token $HF_TOKEN
-    fi
+    # The Hub client reads HF_TOKEN directly; no persistent login is needed.
     queue_downloads "${MODEL_DOWNLOADS[@]}"
 }
 
@@ -302,9 +319,22 @@ function install_extra_packages() {
             echo "Installing ${package}..."
             uv pip install -U "${package}"
         ) &
+        BACKGROUND_PIDS+=("$!")
     done
 }
 
+function wait_for_background_jobs() {
+    local pid
+    local failed=0
+    for pid in "${BACKGROUND_PIDS[@]}"; do
+        if ! wait "$pid"; then
+            echo "Error: Background provisioning job ${pid} failed." >&2
+            failed=1
+        fi
+    done
+    BACKGROUND_PIDS=()
+    return "$failed"
+}
 
 function install_sageattention() {
     python3 -m pip uninstall -y torch torchvision torchaudio
@@ -331,19 +361,34 @@ function install_sageattention() {
     export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 # Optional
     python3 -m pip install --no-build-isolation --no-deps --force-reinstall -e .
 
-    echo COMFYUI_MGPU_WORKER_FLAGS="--use-sage-attention" >> /workspace/.env
+    echo 'COMFYUI_MGPU_WORKER_FLAGS="--use-sage-attention"' >> "${WORKSPACE}/.env"
 }
 
 function create_start_comfyui_script() {
-    cat > /workspace/start_comfyui.sh <<'EOF'
-#!/bin/bash
+    {
+        printf '#!/bin/bash\n\nexport WORKSPACE=%q\n' "$WORKSPACE"
+        cat <<'EOF'
 
 set -e
 
 source /venv/main/bin/activate
 
 supervisorctl stop comfyui || true
-pgrep -f main.py | xargs -r kill -9
+# Only stop ComfyUI processes from this workspace.
+python - <<'PY'
+import os
+import signal
+from pathlib import Path
+
+main = str(Path(os.environ["WORKSPACE"]) / "ComfyUI" / "main.py").encode()
+for process in Path("/proc").glob("[0-9]*"):
+    try:
+        args = (process / "cmdline").read_bytes().split(b"\0")
+        if main in args:
+            os.kill(int(process.name), signal.SIGKILL)
+    except (FileNotFoundError, ProcessLookupError):
+        pass
+PY
 
 cuda_device_count="$(python - <<'PY'
 import torch
@@ -357,16 +402,17 @@ if [[ "${cuda_device_count}" -lt 1 ]]; then
     exit 1
 fi
 
-cd /workspace
+cd "$WORKSPACE"
 
-python /workspace/ComfyUI/main.py --cuda-device 0 --port 18188 > comfyui-0.log 2>&1 &
+python "$WORKSPACE/ComfyUI/main.py" --cuda-device 0 --port 18188 > comfyui-0.log 2>&1 &
 
 for ((i = 1; i < cuda_device_count; i++)); do
-    python /workspace/ComfyUI/main.py --cuda-device "${i}" --port "$((8188 + i))" > "comfyui-${i}.log" 2>&1 &
+    python "$WORKSPACE/ComfyUI/main.py" --cuda-device "${i}" --port "$((8188 + i))" > "comfyui-${i}.log" 2>&1 &
 done
 EOF
+    } > "${WORKSPACE}/start_comfyui.sh"
 
-    chmod +x /workspace/start_comfyui.sh
+    chmod +x "${WORKSPACE}/start_comfyui.sh"
 }
 
 function print_download_summary() {
@@ -381,7 +427,8 @@ function print_download_summary() {
 }
 
 function provisioning_start() {
-    
+    source /venv/main/bin/activate
+
     provisioning_print_header
     select_download_groups
     #uninstall old comfyui frontend package to fix deprecated import errors.
@@ -395,7 +442,9 @@ function provisioning_start() {
     ensure_model_directories
 
     create_start_comfyui_script
-    echo 'COMFYUI_MGPU_WORKER_FLAGS="--use-ck-attention --disable-pinned-memory"' >> /workspace/.env
+    touch "${WORKSPACE}/.env"
+    sed -i '/^COMFYUI_MGPU_WORKER_FLAGS=/d' "${WORKSPACE}/.env"
+    echo 'COMFYUI_MGPU_WORKER_FLAGS="--use-ck-attention --disable-pinned-memory"' >> "${WORKSPACE}/.env"
 
     echo ""
     echo "================================"
@@ -406,11 +455,11 @@ function provisioning_start() {
     download_loras
     #install_sageattention
     install_extra_packages
-    wait
+    wait_for_background_jobs
     print_download_summary
     provisioning_print_end
 }
 
-if [[ ! -f /.noprovisioning ]]; then
+if [[ "${BASH_SOURCE[0]}" == "$0" && ! -f /.noprovisioning ]]; then
     provisioning_start
 fi

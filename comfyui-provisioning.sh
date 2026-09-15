@@ -12,10 +12,10 @@ TEXT_ENCODERS_DIR="${COMFYUI_DIR}/models/text_encoders"
 VAE_DIR="${COMFYUI_DIR}/models/vae"
 FRAME_INTERP_DIR="${COMFYUI_DIR}/models/frame_interpolation"
 
-# Comma-separated model groups: WANT2V, WANI2V, H3.
-# Example: MODEL_DOWNLOAD_GROUPS="WANT2V,WANI2V, H3"
+# Comma-separated model groups: WANT2V, WANI2V, H3_REF2V, H3_FLF2V.
+# Example: MODEL_DOWNLOAD_GROUPS="WANT2V, WANI2V, H3_REF2V, H3_FLF2V"
 # Default group MiniMax H3.
-MODEL_DOWNLOAD_GROUPS="${MODEL_DOWNLOAD_GROUPS:-H3}"
+MODEL_DOWNLOAD_GROUPS="${MODEL_DOWNLOAD_GROUPS:-H3_REF2V}"
 
 CUSTOM_NODE_REPOS=(
     "https://github.com/kijai/ComfyUI-KJNodes.git"
@@ -50,13 +50,19 @@ WAN_SHARED_MODEL_DOWNLOADS=(
     "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavys"
 )
 
-H3_MODEL_DOWNLOADS=(
-    "${DIFFUSION_MODELS_DIR}|minimax_h3_fl2va_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/diffusion_models/minimax_h3_fl2va_int8_convrot.safetensors|MiniMax H3 FL2VA Int8ConvRot model"
-    "${DIFFUSION_MODELS_DIR}|minimax_h3_ref2va_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/diffusion_models/minimax_h3_ref2va_int8_convrot.safetensors|MiniMax H3 Ref2VA Int8ConvRot model"
+H3_SHARED_MODEL_DOWNLOADS=(
     "${TEXT_ENCODERS_DIR}|qwen3vl_32b_minimax_h3_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors|MiniMax H3 Qwen3-VL 32B Int8ConvRot text encoder"
     "${VAE_DIR}|minimax_h3_audio_vae_fp32.safetensors|hf://Comfy-Org/MiniMax-H3/vae/minimax_h3_audio_vae_fp32.safetensors|MiniMax H3 audio VAE FP32"
     "${VAE_DIR}|minimax_h3_video_vae_fp16.safetensors|hf://Comfy-Org/MiniMax-H3/vae/minimax_h3_video_vae_fp16.safetensors|MiniMax H3 video VAE FP16"
     "${LORAS_DIR}|minimax_h3_turbo_v4_step600_ema.safetensors|hf://larryvrh/MiniMax-H3-Turbo-Lora/minimax_h3_turbo_v4_step600_ema.safetensors|MiniMax H3 Turbo LoRA"
+)
+
+H3_FLF2V_MODEL_DOWNLOAD=(
+    "${DIFFUSION_MODELS_DIR}|minimax_h3_fl2va_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/diffusion_models/minimax_h3_fl2va_int8_convrot.safetensors|MiniMax H3 FL2VA Int8ConvRot model"
+)
+
+H3_REF2V_MODEL_DOWNLOAD=(
+    "${DIFFUSION_MODELS_DIR}|minimax_h3_ref2va_int8_convrot.safetensors|hf://Comfy-Org/MiniMax-H3/diffusion_models/minimax_h3_ref2va_int8_convrot.safetensors|MiniMax H3 Ref2VA Int8ConvRot model"
 )
 
 WAN_T2V_LORA_DOWNLOADS=(
@@ -130,8 +136,8 @@ function select_download_groups() {
     local -a requested_groups
     local want2v_selected=false
     local wani2v_selected=false
-    local h3_selected=false
-
+    local h3ref_selected=false
+    local h3flf_selected=false
     MODEL_DOWNLOADS=()
     LORA_DOWNLOADS=()
 
@@ -147,21 +153,24 @@ function select_download_groups() {
             WANI2V)
                 wani2v_selected=true
                 ;;
-            H3)
-                h3_selected=true
+            H3_FLF2V)
+                h3flf_selected=true
+                ;;
+            H3_REF2V)
+                h3ref_selected=true
                 ;;
             "")
                 ;;
             *)
                 echo "Error: Unknown model download group '${requested_group}'."
-                echo "Valid groups: WANT2V, WANI2V, H3"
+                echo "Valid groups: WANT2V, WANI2V, H3REF, H3FLF"
                 return 1
                 ;;
         esac
     done
 
-    if [[ "${want2v_selected}" == false && "${wani2v_selected}" == false && "${h3_selected}" == false ]]; then
-        echo "Error: MODEL_DOWNLOAD_GROUPS must contain at least one of: WANT2V, WANI2V, H3"
+    if [[ "${want2v_selected}" == false && "${wani2v_selected}" == false && "${h3ref_selected}" == false && "${h3flf_selected}" == false ]]; then
+        echo "Error: MODEL_DOWNLOAD_GROUPS must contain at least one of: WANT2V, WANI2V, H3FLF2V, H3REF2V"
         return 1
     fi
 
@@ -179,8 +188,15 @@ function select_download_groups() {
         MODEL_DOWNLOADS+=("${WAN_SHARED_MODEL_DOWNLOADS[@]}")
     fi
 
-    if [[ "${h3_selected}" == true ]]; then
-        MODEL_DOWNLOADS+=("${H3_MODEL_DOWNLOADS[@]}")
+    if [[ "${h3ref_selected}" == true ]]; then
+        MODEL_DOWNLOADS+=("${H3_REF2V_MODEL_DOWNLOAD[@]}")
+    fi
+
+    if [[ "${h3flf_selected}" == true ]]; then
+        MODEL_DOWNLOADS+=("${H3_FLF2V_MODEL_DOWNLOAD[@]}")
+    fi
+    if [["${h3ref_selected}" == true || "${h3flf_selected}" == true]]; then
+        MODEL_DOWNLOADS+=("${H3_SHARED_MODEL_DOWNLOADS[@]}")
     fi
 
     echo "Selected model download groups: ${MODEL_DOWNLOAD_GROUPS}"

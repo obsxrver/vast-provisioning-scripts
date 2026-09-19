@@ -5,6 +5,7 @@ set -e
 WORKSPACE="${WORKSPACE:-/workspace}"
 COMFYUI_DIR="${WORKSPACE}/ComfyUI"
 CUSTOM_NODES_DIR="${COMFYUI_DIR}/custom_nodes"
+CHECKPOINTS_DIR="${COMFYUI_DIR}/models/checkpoints"
 DIFFUSION_MODELS_DIR="${COMFYUI_DIR}/models/diffusion_models"
 LORAS_DIR="${COMFYUI_DIR}/models/loras"
 TEXT_ENCODERS_DIR="${COMFYUI_DIR}/models/text_encoders"
@@ -30,6 +31,7 @@ CUSTOM_NODE_REPOS=(
 
 EXTRA_PIP_PACKAGES=(
     "PyOpenGL-accelerate"
+    "sam3"
 )
 
 # Entry format: target_dir|filename|url|label
@@ -47,6 +49,10 @@ WAN_SHARED_MODEL_DOWNLOADS=(
     "${TEXT_ENCODERS_DIR}|umt5_xxl_fp16.safetensors|hf://Comfy-Org/Wan_2.1_ComfyUI_repackaged/split_files/text_encoders/umt5_xxl_fp16.safetensors|UMT5 XXL FP16 text encoder"
     "${VAE_DIR}|Wan2_1_VAE_fp32.safetensors|hf://Kijai/WanVideo_comfy/Wan2_1_VAE_fp32.safetensors|Wan 2.1 VAE FP32"
     "${FRAME_INTERP_DIR}|rife_v4.26_heavy.safetensors|hf://Comfy-Org/frame_interpolation/frame_interpolation/rife_v4.26_heavy.safetensors|Rife 4.26 Heavy"
+)
+
+SAM3_MODEL_DOWNLOAD=(
+    "${CHECKPOINTS_DIR}|sam3.1_multiplex_fp16.safetensors|hf://Comfy-Org/sam3.1/checkpoints/sam3.1_multiplex_fp16.safetensors|SAM3.1 Multiplex Checkpoint"
 )
 
 H3_FLF2V_MODEL_DOWNLOAD=(
@@ -151,6 +157,7 @@ function update_comfyui() {
 function select_download_groups() {
     local requested_group
     local -a requested_groups
+    local sam3_selected=false
     local want2v_selected=false
     local wani2v_selected=false
     local h3ref_selected=false
@@ -164,6 +171,9 @@ function select_download_groups() {
         requested_group="${requested_group^^}"
 
         case "${requested_group}" in
+            SAM3)
+                sam3_selected=true
+                ;;
             WANT2V)
                 want2v_selected=true
                 ;;
@@ -187,13 +197,12 @@ function select_download_groups() {
     done
 
     if [[ "${want2v_selected}" == false && "${wani2v_selected}" == false && "${h3ref_selected}" == false && "${h3flf_selected}" == false ]]; then
-        echo "Error: MODEL_DOWNLOAD_GROUPS must contain at least one of: WANT2V, WANI2V, H3_REF2V, H3_FLF2V"
+        echo "Error: MODEL_DOWNLOAD_GROUPS must contain at least one of: SAM3, WANT2V, WANI2V, H3_REF2V, H3_FLF2V"
         return 1
     fi
 
-    if [[ "${want2v_selected}" == true ]]; then
-        MODEL_DOWNLOADS+=("${WAN_T2V_MODEL_DOWNLOADS[@]}")
-        LORA_DOWNLOADS+=("${WAN_T2V_LORA_DOWNLOADS[@]}")
+    if [[ "${sam3_selected}" == true ]]; then
+        MODEL_DOWNLOADS+=("${SAM3_MODEL_DOWNLOAD[@]}")
     fi
 
     if [[ "${wani2v_selected}" == true ]]; then
